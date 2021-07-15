@@ -66,3 +66,29 @@ var sortArray = function(nums) {
     dfs(0, nums.length - 1);
     return nums;
 };
+
+//冒泡排序
+var sortArray = function(nums) {
+    for(let i =0; i < nums.length - 1; i++) {
+        for(let j = 0; j<nums.length - 1 - i; j++) {
+            if(nums[j]>nums[j+1]) {
+                [nums[j], nums[j+1]] = [nums[j+1], nums[j]]// 比较之后再交换
+            }
+        }
+    }
+    return nums;
+};
+
+// 插入排序
+var sortArray = function(nums) {
+    for(let i =1; i<nums.length;i++) {
+        preIndex = i-1;
+        current = nums[i];
+        while(preIndex>=0 && current<= nums[preIndex]) {
+            nums[preIndex+1] = nums[preIndex];
+            preIndex--;// 从后向前去对比
+        }
+        nums[preIndex+1] = current;
+    }
+    return nums;
+};
