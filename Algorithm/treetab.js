@@ -262,3 +262,18 @@ var lowestCommonAncestor = function(root, p, q) {
     else if(leftres && !rightre)return leftres;// 叶子节点的上面的一个 有左节点
     else if(!leftres && !rightre)return null;// 叶子节点的时候的返回
 };
+
+//二叉搜索树的插入操作
+var insertIntoBST = function(root, val) {
+    if(!root) {
+        let cur = new TreeNode(val);
+        return cur;
+    }
+    if(root.val > val) {
+        root.left = insertIntoBST(root.left, val);
+    }
+    if(root.val < val) {
+        root.right = insertIntoBST(root.right, val);
+    }
+    return root;
+};
