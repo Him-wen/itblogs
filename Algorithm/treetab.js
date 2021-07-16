@@ -173,3 +173,22 @@ var constructMaximumBinaryTree = function(nums) {
 // 递归函数究竟什么时候需要返回值，什么时候不要返回值？
 // 前序和中序，后序和中序构造唯一二叉树
 // 使用数组构造某一特性的二叉树
+
+// 找树左下角的值（递归，前序遍历找最深的点，还可以用层序遍历）
+// 那么如果找最左边的呢？可以使用前序遍历，这样才先优先左边搜索，然后记录深度最大的叶子节点，此时就是树的最后一行最左边的值。
+var findBottomLeftValue = function(root) {
+    let minVal = null;// 初始化最深度的值
+    let minPath = -1;// 初始化最深度的层数
+    const dfs = function(root, depth) {
+        if(!root.left && !root.right) {
+            if(depth > minPath) {// 深度大于之前保存的深度，就替换
+                minPath = depth;
+                minVal = root.val;
+            }
+        }
+        if(root.left)dfs(root.left, depth+1);
+        if(root.right)dfs(root.right, depth+1);
+    }
+    dfs(root, 1);
+    return minVal;
+};
