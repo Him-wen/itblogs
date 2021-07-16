@@ -82,6 +82,7 @@ var hasPathSum = function(root, targetSum) {
         // 递归函数是有返回值的，如果递归函数返回true，说明找到了合适的路径，应该立刻返回。
         }
         if(root.right) {
+            // 这个地方是有隐藏着的回溯
         if(dfs(root.right, count-root.right.val))return true;
         }
         //这里是回溯的完整过程
@@ -143,3 +144,32 @@ var buildTree = function(inorder, postorder) {
     cur.right = buildTree(inorder.slice(index+1), postorder.slice(index, -1));
     return cur;
 };
+
+// 最大二叉树
+var constructMaximumBinaryTree = function(nums) {
+    const dfs = function(arr, left, right) {
+        if(left > right)return null;
+        let maxVal = -1;
+        let maxIndex = -1;
+        for(let i = left; i<= right;i++) {
+            if(maxVal < arr[i]) {
+                maxVal = arr[i];
+                maxIndex = i;
+            }
+        }
+        let cur = new TreeNode(maxVal);
+        cur.left = dfs(arr, left, maxIndex-1);
+        cur.right = dfs(arr, maxIndex+1, right);
+        return cur;
+    }
+    return dfs(nums, 0, nums.length - 1);
+};
+
+// 递归函数什么时候加if，什么时候不加if，其实就是控制空节点（空指针）是否进入递归，是不同的代码实现方式，都是可以的。
+// 「一般情况来说：如果让空节点（空指针）进入递归，就不加if，如果不让空节点进入递归，就加if限制一下， 终止条件也会相应的调整。」
+// 递归中如何隐藏着回溯
+// 如何通过三层关系确定左叶子
+// 如何通过二叉树深度来判断左下角的值
+// 递归函数究竟什么时候需要返回值，什么时候不要返回值？
+// 前序和中序，后序和中序构造唯一二叉树
+// 使用数组构造某一特性的二叉树
