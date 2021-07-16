@@ -122,12 +122,24 @@ var pathSum = function(root, targetSum) {
 };
 //路径总和：2个的区别 一个是返回有没有true或者false就行，一个是返回所有路径
 
-// 重建二叉树
+// 重建二叉树（从前序与中序遍历构造二叉树）
 var buildTree = function(preorder, inorder) {
     if(preorder.length === 0)return null;
-    const cur = new TreeNode(preorder[0]);
-    const index = inorder.indexOf(preorder[0]);
-    cur.left = buildTree(preorder.slice(1, index+1), inorder.slice(0,index));
-    cur.right = buildTree(preorder.slice(index+1), inorder.slice(index+1));
+    const cur = new TreeNode(preorder[0]);// 前序遍历根节点
+    const index = inorder.indexOf(preorder[0]);// 中序遍历根节点
+    // 左子树的时候 前序数组从1开始的递归操作，右子树的时候 中序数组中间index没参与递归
+    cur.left = buildTree(preorder.slice(1, index+1), inorder.slice(0,index));//左子树进行递归
+    cur.right = buildTree(preorder.slice(index+1), inorder.slice(index+1));//右子树进行递归
+    return cur;
+};
+
+// 从中序与后序遍历序列构造二叉树
+var buildTree = function(inorder, postorder) {
+    if(postorder.length === 0) return null;
+    let cur = new TreeNode(postorder[postorder.length - 1]);
+    let index = inorder.indexOf(postorder[postorder.length - 1]);
+    // 左子树的时候 中序数组中间index没参与递归（left到index的前一个，right从index+1开始），右子树的时候 后序数组递归操作到slice end=-1的时候
+    cur.left = buildTree(inorder.slice(0, index), postorder.slice(0, index));
+    cur.right = buildTree(inorder.slice(index+1), postorder.slice(index, -1));
     return cur;
 };
