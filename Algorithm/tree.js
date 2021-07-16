@@ -1,4 +1,4 @@
-// 前序遍历
+// 前序遍历(前序遍历和后序遍历相反的一个流程)
 // 迭代 中左右
 var preorderTraversal = function(root) {
     if(!root) return [];
@@ -40,8 +40,8 @@ var inorderTraversal = function(root) {
         while(p) {//1
             stk.push(p);
             p=p.left;// p从当前的节点 转到左节点，如果左节点不为空，就一直到stk里面
-        }
-        p = stk.pop();// 取出最上面的节点，加入到res中
+        }// 直到p到了叶子节点 下面为空了，
+        p = stk.pop();// 取出栈最上面的节点（也就是叶子节点），加入到res中
         res.push(p.val);
         p = p.right;// 当p的右节点 为空的话 就跳过 1 步骤，执行 p=stk.pop(),然后再继续操作
     }
