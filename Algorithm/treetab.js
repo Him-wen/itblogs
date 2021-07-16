@@ -35,7 +35,7 @@ var binaryTreePaths = function(root) {
     let res = [];
     const dfs = function(root, path) {
         if(!root) return [];
-        path += root.val.toString();
+        path += root.val.toString();// 左右节点不为空的话 就加入操作，然后就到if，不满足的话 就执行else
         if(!root.left && !root.right) {
             res.push(path);
         }else {
@@ -183,7 +183,7 @@ var findBottomLeftValue = function(root) {
         if(!root.left && !root.right) {
             if(depth > minPath) {// 深度大于之前保存的深度，就替换
                 minPath = depth;
-                minVal = root.val;
+                minVal = root.val;// 最大深度最左边的值
             }
         }
         if(root.left)dfs(root.left, depth+1);
@@ -191,4 +191,43 @@ var findBottomLeftValue = function(root) {
     }
     dfs(root, 1);
     return minVal;
+};
+
+// 合并二叉树
+var mergeTrees = function(root1, root2) {
+    if(!root1 && !root2)return null;
+    if(!root1)return root2;
+    if(!root2)return root1;
+    root2.val += root1.val;
+    root2.left= mergeTrees(root1.left, root2.left);
+    root2.right= mergeTrees(root1.right, root2.right);
+    return root2;
+};
+
+//二叉搜索树 一定要使用中序
+// 遇到在二叉搜索树上求什么最值啊，差值之类的，就把它想成在一个有序数组上求最值，求差值，这样就简单多了。
+var searchBST = function(root, val) {
+    if(!root)return root;
+    if(root.val === val)return root;
+    if(root.val > val){
+       return searchBST(root.left, val);
+    }
+    if(root.val < val){
+       return searchBST(root.right, val);
+    }
+};
+// 98验证二叉搜索树
+var isValidBST = function(root) {
+    let arr = [];
+    const dfs = function(root) {
+        if(!root)return true;
+        dfs(root.left);
+        arr.push(root.val);
+        dfs(root.right);
+    }
+    dfs(root);
+    for(let i =1;i<=arr.length;i++) {
+        if(arr[i] <= arr[i-1])return false;
+    }
+    return true;
 };
