@@ -231,3 +231,34 @@ var isValidBST = function(root) {
     }
     return true;
 };
+
+// 530二叉搜索树的最小值绝对值的差
+var getMinimumDifference = function(root) {
+    let arr = [];
+    const dfs = function(root) {
+        if(!root)return true;
+        dfs(root.left);
+        arr.push(root.val);
+        dfs(root.right);
+    }
+    dfs(root);
+    let res = Infinity;
+    if(arr.length <2) return 0;
+    for(let i =1;i<=arr.length;i++) {
+        // res = Math.min(res, Math.abs(arr[i]-arr[i-1]));
+        if (res > arr[i] - arr[i - 1])// 肯定是正数因为是有序数组
+            res = arr[i] - arr[i - 1];// 存起来
+    }
+    return res;
+};
+
+//二叉树的最近公共祖先
+var lowestCommonAncestor = function(root, p, q) {
+    if(root === q || root === p || !root)return root;// 当p或者q是root的时候直接返回就行
+    let leftres = lowestCommonAncestor(root.left, p, q);// 递归到叶子节点，再接下来判断if
+    let rightre = lowestCommonAncestor(root.right, p, q);
+    if(leftres && rightre)return root;// 左右子树两边各有一个，那说明是rooy
+    if(!leftres && rightre)return rightre;// 其中一个为null，一个已经有值了，因为有值肯定说明找到了p或者q;
+    else if(leftres && !rightre)return leftres;// 叶子节点的上面的一个 有左节点
+    else if(!leftres && !rightre)return null;// 叶子节点的时候的返回
+};
