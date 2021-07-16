@@ -17,3 +17,33 @@ var isBalanced = function(root) {
     }
     return dfs(root) !== -1;// 返回判断res的值 是不是等于-1;
 };
+
+//相同的树
+var isSameTree = function(p, q) {
+    if(p && !q)return false;
+    else if(!p && q)return false;
+    else if(p && q && p.val !== q.val)return false;
+    else if(!q && !p)return true;
+
+    let sameleft = isSameTree(p.left, q.left);
+    let sameright = isSameTree(p.right, q.right);
+    return sameleft && sameright;// 返回所有的有true的并集
+};
+
+//二叉树的所有路径
+var binaryTreePaths = function(root) {
+    let res = [];
+    const dfs = function(root, path) {
+        if(!root) return [];
+        path += root.val.toString();
+        if(!root.left && !root.right) {
+            res.push(path);
+        }else {
+            path += '->';
+            dfs(root.left, path);
+            dfs(root.right, path);
+        }
+    }
+    dfs(root, '');
+    return res;
+};
