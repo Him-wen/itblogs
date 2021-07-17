@@ -78,3 +78,26 @@ var search = function(nums, target) {
     if(nums[left]===target) res = left;// 这里是跳出循环当前二分的长度为一的时候，答案肯定就在这个里面了
     return res;
 };
+
+//在排序数组中查找数字 I
+var search = function(nums, target) {
+    if(nums.length === 0)return 0;
+    let left = 0, right = nums.length-1;
+
+    while(left<right) {
+        let mid = left+right >>1;
+        if(nums[mid] >= target)right = mid;
+        else left = mid+1;
+    }
+    if(nums[left]!==target)return 0;
+    let res = left;
+
+    left = 0, right = nums.length-1;
+    while(left<right) {
+        let mid = left+right+1 >>1;
+        if(nums[mid] <= target)left = mid;
+        else right = mid-1;
+    } 
+    let ans = right;
+    return ans - res + 1;// 核心就是最后面的位置减去最前面的位置
+};
