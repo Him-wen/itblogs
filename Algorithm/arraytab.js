@@ -32,6 +32,7 @@ var search = function(nums, target) {
 
 // 在排序数组中查找元素的第一个和最后一个位置
 // 板子🔗：https://www.acwing.com/solution/content/8235/
+// 精髓: 每次选择答案所在的区间再进行下一步的处理
 var searchRange = function(nums, target) {
     let res = [-1, -1];
     if(nums.length === 0) return res;
@@ -51,7 +52,7 @@ var searchRange = function(nums, target) {
     left =0, right =nums.length-1;
     while(left < right) {
         let mid = left+right+1 >> 1;//为什么需要+1？原因是如果不加上1，那么mid得到的是下取整的数，那么有可能[m,r]更新过后m会一直等于m（m+1==r的情况）会陷入死循环。
-        if(nums[mid] <= target) {// 如果满足性质，那说明答案target肯定是在mid的右半边
+        if(nums[mid] <= target) {// 如果满足性质，那说明答案target肯定是在mid的右半边，小于的话要补上加一
             left = mid;
         }else {
             right = mid-1;
@@ -68,12 +69,12 @@ var search = function(nums, target) {
     let res = -1;
     while(left < right) {
         let mid = left + right >> 1;
-        if(nums[mid] >= target) {// 选上面的一个板子就行
+        if(nums[mid] >= target) {// 选上面的一个板子就行，先把这个性质想清楚，在根据判断 是true的话，答案在哪个边界，这里是在mid的左边界 而且包含mid，所以直接让right=mid
             right = mid;
         } else {
             left = mid+1;
         }
     }
-    if(nums[left]===target) res = left;
+    if(nums[left]===target) res = left;// 这里是跳出循环当前二分的长度为一的时候，答案肯定就在这个里面了
     return res;
 };
