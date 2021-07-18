@@ -99,5 +99,33 @@ var search = function(nums, target) {
         else right = mid-1;
     } 
     let ans = right;
-    return ans - res + 1;// 核心就是最后面的位置减去最前面的位置
+    return ans - res + 1;// 核心就是最后面的位置减去最前面的位置+1
+};
+
+// 35搜索插入位置
+var searchInsert = function(nums, target) {
+    if(nums.length === 0)return 0;
+    let left = 0, right = nums.length;// right取n的话，left就可以取到最后一个有效元素n-1，然后target还大的话，就直接返回n，target小就返回n-1，厉害。 这样比right=size-1来说，多处理一种情况。
+
+    while(left<right) {
+        let mid = left+right >>1;
+        if(nums[mid] >= target)right = mid;
+        else left = mid+1;
+    }
+    return left;
+};
+
+// 560 和为k的子数组
+var subarraySum = function(nums, k) {// 暴力
+    let count = 0;
+    for(let i =0; i<nums.length;i++) {
+        for(let j =0; j<nums.length;j++) {
+            let sum =0;
+            for(let p=i; p<=j; p++) {
+                sum += nums[p];
+            }
+            if(sum === k)count++;
+        }
+    }
+    return count;
 };

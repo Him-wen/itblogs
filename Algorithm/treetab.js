@@ -66,8 +66,8 @@ var sumOfLeftLeaves = function(root) {
 var hasPathSum = function(root, targetSum) {
     if(!root)return false;
     if(!root.left && !root.right && root.val === targetSum) return true;
-    let leftpath = hasPathSum(root.left, targetSum-root.val);
-    let rightpath = hasPathSum(root.right, targetSum-root.val);
+    let leftpath = hasPathSum(root.left, targetSum-root.val);//一直递归到叶子节点
+    let rightpath = hasPathSum(root.right, targetSum-root.val);//一直递归到叶子节点
     return leftpath || rightpath;// 有一条成功就行
 };
 
@@ -275,5 +275,17 @@ var insertIntoBST = function(root, val) {
     if(root.val < val) {
         root.right = insertIntoBST(root.right, val);
     }
+    return root;
+};
+
+
+// 翻转二叉树
+// 翻转(根节点) = 翻转(根节点的左节点) + 翻转(根节点的右节点)invert(root) = invert(root->left) + invert(root->right)
+var invertTree = function(root) {
+    if(!root)return null;// 递归的终止条件是当结点为叶子结点时终止（因为叶子节点没有左右结点）
+    let releft = invertTree(root.left);
+    let reright = invertTree(root.right);
+    root.left = reright;
+    root.right = releft;
     return root;
 };
