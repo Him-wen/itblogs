@@ -95,3 +95,42 @@ var combinationSum = function(candidates, target) {
     dfs(target);
     return res;
 };
+// 40. 组合总和 II
+// 数组有重复元素，集合不能有相同的，保证同一个树枝上可以重复，同一个树层上面不可以重复
+/**
+ * 
+ * @param {*} candidates 
+ * @param {*} target 
+ * @returns 
+ * 都知道组合问题可以抽象为树形结构，那么“使用过”在这个树形结构上是有两个维度的，一个维度是同一树枝上使用过（单个组合里面），一个维度是同一树层上（res里面的不同组合里面）使用过。
+ * 「没有理解这两个层面上的“使用过” 是造成大家没有彻底理解去重的根本原因。」
+ */
+var combinationSum2 = function(candidates, target) {
+    let res = [];
+    let link = [];
+    let used = new Array(candidates.length).fill(false);// 初始值均为false；
+
+    const dfs = function(target, startIndex) {
+        if(target === 0) {
+            res.push([...link]);
+            return;
+        }
+
+        if(target<0)return;// 这个条件要 不然就会超时
+
+        for(let i = startIndex; i<candidates.length; i++) {
+            // used[i - 1] == true，说明同一树支candidates[i - 1]使用过
+            // used[i - 1] == false，说明同一树层candidates[i - 1]使用过
+            if(i>0 && candidates[i]===candidates[i-1] && used[i-1]===false)continue;
+            used[i] = true;
+            link.push(candidates[i]);
+            dfs(target-candidates[i], i+1);
+            used[i] = false;
+            link.pop();
+        }
+    }
+
+    candidates.sort((x, y)=> x - y);
+    dfs(target, 0);
+    return res;
+};
