@@ -26,7 +26,7 @@ var permute = function(nums) {
     return res;
 };
 
-// 组合
+// 组合（无序，子集问题也是无序）
 // 一个集合来求组合的话，就需要startIndex
 // 包含一个剪枝优化 for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) 
 var combine = function(n, k) {
@@ -102,6 +102,7 @@ var combinationSum = function(candidates, target) {
  * @param {*} candidates 
  * @param {*} target 
  * @returns 
+ * 解集中不能包含重复的，就可以用这个方法去重，就需要先排序
  * 都知道组合问题可以抽象为树形结构，那么“使用过”在这个树形结构上是有两个维度的，一个维度是同一树枝上使用过（单个组合里面），一个维度是同一树层上（res里面的不同组合里面）使用过。
  * 「没有理解这两个层面上的“使用过” 是造成大家没有彻底理解去重的根本原因。」
  */
@@ -132,5 +133,53 @@ var combinationSum2 = function(candidates, target) {
 
     candidates.sort((x, y)=> x - y);
     dfs(target, 0);
+    return res;
+};
+
+// 关于startIndex的选择
+// 「本题还需要startIndex来控制for循环的起始位置，对于组合问题，什么时候需要startIndex呢？」
+
+// 我举过例子，如果是一个集合来求组合的话，就需要startIndex，例如：回溯算法：求组合问题！，回溯算法：求组合总和！。
+
+// 如果是多个集合取组合，各个集合之间相互不影响，那么就不用startIndex，例如：回溯算法：电话号码的字母组合
+
+// 子集
+var subsets = function(nums) {
+    let res = [];
+    let link = [];
+
+    const dfs = function(startIndex) {
+        res.push([...link]);// 要遍历整个树，就每次都添加进去
+
+        for(let i =startIndex; i<nums.length;i++) {
+            link.push(nums[i]);
+            dfs(i+1);
+            link.pop();
+        }
+    }
+    dfs(0);
+    return res;
+};
+
+//子集II
+// 和组合总和II一个思想，需要处理去重操作
+var subsetsWithDup = function(nums) {
+    let res = [];
+    let link = [];
+    let used = new Array(nums.length).fill(false);
+    const dfs = function(startIndex) {
+        res.push([...link]);// 要遍历整个树，就每次都添加进去
+
+        for(let i =startIndex; i<nums.length;i++) {
+            if(nums[i]===nums[i-1] && used[i-1] ===false)continue;
+            used[i] = true;
+            link.push(nums[i]);
+            dfs(i+1);
+            link.pop();
+            used[i] = false;
+        }
+    }
+    nums.sort((x, y)=> x-y);
+    dfs(0);
     return res;
 };
