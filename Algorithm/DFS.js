@@ -27,6 +27,7 @@ var permute = function(nums) {
 };
 
 // 组合
+// 一个集合来求组合的话，就需要startIndex
 // 包含一个剪枝优化 for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) 
 var combine = function(n, k) {
     let res = [];
@@ -70,5 +71,27 @@ var combinationSum3 = function(k, n) {
         }
     }
     dfs(1);
+    return res;
+};
+
+// 39. 组合总和
+// 数组无重复元素，元素重复选取
+var combinationSum = function(candidates, target) {
+    let res = [];
+    let link = [];
+    
+    const dfs = function(target) {
+        if(target === 0) {
+            res.push([...link])
+          return;
+        }
+        if(target < 0)return;
+        for(let i=0;i<candidates.length;i++) {
+            link.push(candidates[i]);
+            dfs(target-candidates[i]);
+            link.pop();
+        } 
+    }
+    dfs(target);
     return res;
 };
