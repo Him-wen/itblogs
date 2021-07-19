@@ -183,3 +183,32 @@ var subsetsWithDup = function(nums) {
     dfs(0);
     return res;
 };
+
+//全排列II
+var permuteUnique = function(nums) {
+    if(!nums.length) return [];
+    let res = [];
+    let link = [];
+    let used = new Array(nums.length).fill(false);
+
+    const dfs = function() {
+        if(link.length === nums.length) {
+            res.push([...link]);
+            return;
+        }
+
+        for(let i =0; i < nums.length; i++) {
+            if(i>0 && nums[i] === nums[i-1] && used[i-1] === false)continue;// 解集的去重同子集和组合的题目
+            if(used[i]=== false) {// 没用过的才能加入进来
+                link.push(nums[i])
+                used[i] = true;
+                dfs();
+                used[i] = false;
+                link.pop();
+            }
+        }
+    }
+    nums.sort((x, y) => x - y);
+    dfs();
+    return res;
+};
