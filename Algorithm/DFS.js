@@ -1,31 +1,3 @@
-// 全排列
-var permute = function(nums) {
-    if(!nums.length) return [];
-    let res = [];
-    let link = [];
-    let used = new Array(nums.length).fill(false);// 将标识符都置为false；
-
-    const dfs = function() {
-        //当link排列的数字个数为nums的数字个数
-        if(link.length === nums.length) {
-            res.push([...link]);
-            return;// 返回到n-1的时候的dfs（也就是上一层进来的时候的dfs）
-        }
-        //当link排列的数字个数小于nums的数字个数，就执行DFS过程
-        for(let i =0; i < nums.length; i++) {
-            if(used[i]=== false) {// 筛选出来之前没用过的数字
-                link.push(nums[i])//插入
-                used[i] = true;//表示已经用过了
-                dfs();//递归处理下一层
-                used[i] = false;
-                link.pop();
-            };
-        }
-    }
-    dfs();
-    return res;
-};
-
 // 组合（无序，子集问题也是无序）
 // 一个集合来求组合的话，就需要startIndex
 // 包含一个剪枝优化 for (int i = startIndex; i <= n - (k - path.size()) + 1; i++) 
@@ -171,6 +143,7 @@ var subsetsWithDup = function(nums) {
         res.push([...link]);// 要遍历整个树，就每次都添加进去
 
         for(let i =startIndex; i<nums.length;i++) {
+            //和子集相比的多了一个这个
             if(nums[i]===nums[i-1] && used[i-1] ===false)continue;
             used[i] = true;
             link.push(nums[i]);
@@ -181,6 +154,34 @@ var subsetsWithDup = function(nums) {
     }
     nums.sort((x, y)=> x-y);
     dfs(0);
+    return res;
+};
+
+// 全排列
+var permute = function(nums) {
+    if(!nums.length) return [];
+    let res = [];
+    let link = [];
+    let used = new Array(nums.length).fill(false);// 将标识符都置为false；
+
+    const dfs = function() {
+        //当link排列的数字个数为nums的数字个数
+        if(link.length === nums.length) {
+            res.push([...link]);
+            return;// 返回到n-1的时候的dfs（也就是上一层进来的时候的dfs）
+        }
+        //当link排列的数字个数小于nums的数字个数，就执行DFS过程
+        for(let i =0; i < nums.length; i++) {
+            if(used[i]=== false) {// 筛选出来之前没用过的数字
+                link.push(nums[i])//插入
+                used[i] = true;//表示已经用过了
+                dfs();//递归处理下一层
+                used[i] = false;
+                link.pop();
+            };
+        }
+    }
+    dfs();
     return res;
 };
 
@@ -198,6 +199,7 @@ var permuteUnique = function(nums) {
         }
 
         for(let i =0; i < nums.length; i++) {
+            //和全排列相比的多了一个这个
             if(i>0 && nums[i] === nums[i-1] && used[i-1] === false)continue;// 解集的去重同子集和组合的题目
             if(used[i]=== false) {// 没用过的才能加入进来
                 link.push(nums[i])
@@ -211,4 +213,75 @@ var permuteUnique = function(nums) {
     nums.sort((x, y) => x - y);
     dfs();
     return res;
+};
+
+// n皇后
+var solveNQueens = function(n) {
+    function isValid(row, col, chessBoard, n) {
+        for(let i = 0; i < row; i++) {
+            if(chessBoard[i][col] === 'Q') {
+                return false
+            }
+        }
+        for(let i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
+            if(chessBoard[i][j] === 'Q') {
+                return false
+            }
+        }
+        for(let i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
+            if(chessBoard[i][j] === 'Q') {
+                return false
+            }
+        }
+        return true
+    }
+
+    let result = []
+    function backtracing(row,chessBoard) {
+        if(row === n) {
+            const stringsBoard = chessBoard.slice(); // 拷贝一份board
+            for (let i = 0; i < n; i++) {
+                stringsBoard[i] = stringsBoard[i].join(''); 
+                // 将每一行拼成字符串
+            }
+            result.push(stringsBoard); // 推入res数组
+            return;
+        }
+        for(let col = 0; col < n; col++) {
+            if(isValid(row, col, chessBoard, n)) {
+                chessBoard[row][col] = 'Q'
+                backtracing(row + 1,chessBoard)
+                chessBoard[row][col] = '.'
+            }
+        }
+    }
+    let chessBoard = new Array(n).fill([]).map(() => new Array(n).fill('.'))
+    backtracing(0,chessBoard)
+    return result
+    
+};
+
+// 79单词搜索
+// 一般做返回boolean值的题目 基本上都是判断dfs是否为true或者false；
+var exist = function(nums, word) {
+    let x = nums.length;// 获取行数
+    let y = nums[0].length;// 获取列数
+
+    const dfs = function(i, j, index) {
+        //各种越界的处理
+        if(i<0 || i>=x || j<0 || j>=y || nums[i][j] !== word[index]) return false;
+        if(index === word.length-1)return true;
+        
+        let temp = nums[i][j];//暂时存储
+        nums[i][j] = '1';
+        // 这里就是选择的过程 4种情况，相当于是组合排列里面的for循环，也就是树里面的宽度，进行递归
+        let res = dfs(i-1, j, index+1) || dfs(i, j-1, index+1) || dfs(i+1, j, index+1) || dfs(i, j+1, index+1);
+        nums[i][j] = temp;// 还原现场
+        if(res)return true;
+    }
+
+    for(let i=0; i<x;i++)
+        for(let j=0;j<y;j++)
+            if(dfs(i, j, 0))return true;
+    return false;
 };
