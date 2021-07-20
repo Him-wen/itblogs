@@ -47,49 +47,6 @@
   };
 
 
-  //三角形最小路径和
-  var minimumTotal = function(triangle) {
-    let n = triangle.length;
-    let dp = new Array(n+1).fill([]).map(()=>new Array(n+1).fill(0));
-
-    // for(let i=1;i<n;i++) {
-    // dp[i][n] = triangle[i][n];
-    // }
-
-    for(let i =n-1;i>=0;i--) {
-        for(let j = 0;j <= i;j++) {
-            dp[i][j] = Math.min(dp[i+1][j], dp[i+1][j+1])+triangle[i][j];
-        }
-    }
-    return dp[0][0];
-};
-
-//最长上升子序列
-var lengthOfLIS = function(nums) {
-    let n = nums.length;
-    let dp =new Array(n+1).fill(1);
-    for(let i =1;i<=n;i++) {
-        dp[i]=1;
-    }
-    for(let i=1;i<=n;i++){
-        for(let j=0;j<i;j++){
-            // 这层for循环得出dp[i]
-            // 当前元素大于前面的一个 dp[j]+1
-			// 但是dp[i]有多个子问题(for循环) 需要从这个子问题选取最大的
-			// Math.max(dp[i],dp[j]+1) 这里的dp[i]表示前面的子问题筛选出的结果和当前子问题
-				dp[i] = Math.max(dp[i], dp[j] + 1)
-            if(nums[i]>nums[j]){
-                dp[i]=Math.max(dp[j]+1,dp[i]);
-            }
-        }
-    }
-    let res=0;
-    for(let i=1;i<=n;i++) {
-        res =Math.max(res,dp[i]);
-    }
-    return res;
-};
-
 //不同路径II（和不同路径的区别是有障碍，就不需要赋初值 或者推导出来）
 var uniquePathsWithObstacles = function(obstacleGrid) {
     let m = obstacleGrid.length;
@@ -174,3 +131,87 @@ var minDistance = function(word1, word2) {
     }
     return dp[m][n];
 };
+
+//最长公共子序列
+// f[i][j]f[i][j] 表示a的前i个字母，和b的前j个字母的最长公共子序列长度
+// 关于初始化情况：先看看dp[i][0]应该是多少呢？
+// test1[0, i-1]和空串的最长公共子序列自然是0，所以dp[i][0] = 0;
+// 同理dp[0][j]也是0。
+// 其他下标都是随着递推公式逐步覆盖，初始为多少都可以，那么就统一初始为0。
+var longestCommonSubsequence = function(text1, text2) {
+    let n = text1.length;
+    let m = text2.length;
+    let dp = Array.from(new Array(n+1),() => new Array(m+1).fill(0));// 这里就统一赋值为0
+    for(let i = 1;i <= n;i++){
+        for(let j = 1;j<= m;j++){
+            if(text1[i] === text2[j]){// 
+                dp[i][j] = dp[i-1][j-1] + 1;// 
+            }else{
+                dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+            }
+        }
+    }
+    return dp[n][m];
+};
+
+//三角形最小路径和
+var minimumTotal = function(triangle) {
+    let n = triangle.length;
+    let dp = new Array(n+1).fill([]).map(()=>new Array(n+1).fill(0));
+
+    // for(let i=1;i<n;i++) {
+    // dp[i][n] = triangle[i][n];
+    // }
+
+    for(let i =n-1;i>=0;i--) {
+        for(let j = 0;j <= i;j++) {
+            dp[i][j] = Math.min(dp[i+1][j], dp[i+1][j+1])+triangle[i][j];
+        }
+    }
+    return dp[0][0];
+};
+
+//最长上升子序列
+var lengthOfLIS = function(nums) {
+    let n = nums.length;
+    let dp =new Array(n+1).fill(1);// 包含初始值部分
+    // for(let i =1;i<=n;i++) {
+    //     dp[i]=1;// 这里不需要的原因是初始值已经是为1了
+    // }
+    for(let i=1;i<=n;i++){
+        for(let j=0;j<i;j++){
+            // 这层for循环得出dp[i]
+            // 当前元素大于前面的一个 dp[j]+1
+			// 但是dp[i]有多个子问题(for循环) 需要从这个子问题选取最大的
+			// Math.max(dp[i],dp[j]+1) 这里的dp[i]表示前面的子问题筛选出的结果和当前子问题
+			// dp[i] = Math.max(dp[i], dp[j] + 1)
+            if(nums[i]>nums[j]){
+                dp[i]=Math.max(dp[j]+1,dp[i]);
+            }
+        }
+    }
+    let res=0;
+    for(let i=1;i<=n;i++) {
+        res =Math.max(res,dp[i]);
+    }
+    return res;
+};
+
+// 最长连续递增子序列
+// 以下标i为结尾的数组的连续递增的子序列长度为dp[i]。
+// 这题和最长公共子序列的区别 就是因为本题要求连续递增子序列，所以就必要比较nums[i + 1]与nums[i]，而不用去比较nums[j]与nums[i] （j是在0到i之间遍历）。既然不用j了，那么也不用两层for循环，本题一层for循环就行，比较nums[i + 1] 和 nums[i]。
+var findLengthOfLCIS = function(nums) {
+    let n = nums.length;
+    if(!n)return 0;
+    let dp = new Array(n+1).fill(1);// 初始化全部为1
+    let res = 1;
+    for(let i =1;i<n;i++) {// 从1到n-1
+        if(nums[i]>nums[i-1]){// 那么以 i 为结尾的数组的连续递增的子序列长度 一定等于 以i-1为结尾的数组的连续递增的子序列长度 + 1 。
+            dp[i] = dp[i-1]+1;
+        }
+        res = Math.max(res, dp[i]);
+    }
+    return res;
+};
+
+// 最长重复子数组
