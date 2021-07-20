@@ -109,18 +109,27 @@ var minPathSum = function(grid) {
 };
 
 // 一般来说当字符串下标涉及到i-1 循环从1开始比较好
-//编辑距离（案例未过）
+/*
+五部曲；
+1.确定DP数组及下标的含义
+2.确定递推公式
+3.DP数组的初始化
+4.确定遍历顺序，可以看从哪些方向递推过来的
+5.举例推导DP数组
+动态规划注意细节
+一般来说当字符串下标涉及到i-1 循环从1开始比较好
+初始化的话 要是为0 还是为1开始的，
+关于else的是否写还是不写
+注意是自上而下遍历还是自底向上
+*/
+//编辑距离（）
 var minDistance = function(word1, word2) {
     let m = word1.length;
     let n = word2.length;
-    // dp[i] [j]的含义为：当字符串 word1 的长度为 i，字符串 word2 的长度为 j 时，将 word1 转化为 word2 所使用的最少操作次数为 dp[i] [j]。
+    // dp[i][j] 表示以下标i-1为结尾的字符串word1，和以下标j-1为结尾的字符串word2，最近编辑距离为dp[i][j]。
     let dp = new Array(m+1).fill([]).map(()=>new Array(n+1).fill(0));
-    for(let i =1;i<=m;i++) {
-        dp[i][0] = dp[i-1][0]+1;
-    }
-    for(let j =1;j<=n;j++) {
-        dp[0][j] = dp[0][j-1]+1;
-    }
+    for(let i =0;i<=m;i++)dp[i][0] = i;
+    for(let j =0;j<=n;j++)dp[0][j] = j;
 
     for(let i=1;i<=m;i++) {
         for(let j=1;j<=n;j++) {
@@ -128,7 +137,8 @@ var minDistance = function(word1, word2) {
             if(word1[i-1] === word2[j-1]) {
                 dp[i][j] = dp[i-1][j-1];
             }
-            dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i-1][j], dp[i][j-1]))+1;
+            //这里的else一定要加
+            else dp[i][j] = Math.min(dp[i-1][j-1]+1, Math.min(dp[i-1][j], dp[i][j-1])+1);
         }
     }
     return dp[m][n];
@@ -155,6 +165,7 @@ var minDistance = function(word1, word2) {
 };
 
 //最长公共子序列
+//1035不相交的线同理
 // f[i][j]f[i][j] 表示a的前i个字母，和b的前j个字母的最长公共子序列长度
 // 关于初始化情况：先看看dp[i][0]应该是多少呢？
 // test1[0, i-1]和空串的最长公共子序列自然是0，所以dp[i][0] = 0;
@@ -166,7 +177,7 @@ var longestCommonSubsequence = function(text1, text2) {
     let dp = Array.from(new Array(n+1),() => new Array(m+1).fill(0));// 这里就统一赋值为0
     for(let i = 1;i <= n;i++){
         for(let j = 1;j<= m;j++){
-            if(text1[i] === text2[j]){// 
+            if(text1[i] === text2[j]){// 最后一个字符串相等
                 dp[i][j] = dp[i-1][j-1] + 1;// 
             }else{
                 dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
@@ -236,4 +247,60 @@ var findLengthOfLCIS = function(nums) {
     return res;
 };
 
-// 最长重复子数组
+// 718最长重复子数组
+var findLength = function(text1, text2) {
+    let n = text1.length;
+    let m = text2.length;
+    let dp = Array.from(new Array(n+1),() => new Array(m+1).fill(0));// 这里就统一赋值为0
+    for(let i = 1;i <= n;i++){
+        for(let j = 1;j<= m;j++){
+            if(text1[i-1] === text2[j-1]){// 
+                dp[i][j] = dp[i-1][j-1] + 1;// 
+            }
+        }
+    }
+    let res=0;
+    for(let i=1;i<=n;i++) {
+        for(let j = 1;j<= m;j++){
+            res =Math.max(res,dp[i][j]);
+        }
+    }
+    return res;
+};
+
+//最大子序列和
+var maxSubArray = function(nums) {
+    let n = nums.length;
+    let dp = new Array(n+1).fill(0);
+    dp[0] = nums[0];
+    for(let i=1;i<n;i++) {
+        dp[i] = Math.max(dp[i-1]+nums[i], nums[i]);
+    }
+    let res = dp[0];
+    for(let i=1;i<n;i++) {
+        res = Math.max(res, dp[i]);
+    }
+    return res;
+};
+
+//回文子串
+var countSubstrings = function(s) {
+    let n = s.length;
+    let dp = new Array(n+1).fill([]).map(()=>new Array(n+1).fill(false));
+    // 布尔类型的dp[i][j]：表示区间范围[i,j] （注意是左闭右闭）的子串是否是回文子串，如果是dp[i][j]为true，否则为false。
+    let res = 0;
+    for(let i=s.length -1;i>=0;i--) {
+        for(let j=i;j<s.length;j++) {//j要保证比i大
+            if(s[i] === s[j]){
+                if(j-i<=1){
+                    res++;
+                    dp[i][j] = true;
+                }else if(dp[i+1][j-1]) {
+                    res++;
+                    dp[i][j] = true;
+                }
+            }
+        }
+    }
+    return res;
+};
