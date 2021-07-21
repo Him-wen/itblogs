@@ -297,7 +297,7 @@ var maxPathSum = function(root) {
 
         let leftval = Math.max(dfs(root.left), 0);
         let rightval = Math.max(dfs(root.right), 0);
-
+        // 维护一个全局变量 maxSum 存储最大路径和，在递归过程中更新 maxSum 的值，最后得到的 maxSum 的值即为二叉树中的最大路径和。
         let maxVal = root.val + leftval + rightval;
         res = Math.max(res, maxVal);
 
