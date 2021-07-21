@@ -289,3 +289,21 @@ var invertTree = function(root) {
     root.right = releft;
     return root;
 };
+
+//二叉树的最大路径和
+var maxPathSum = function(root) {
+    const dfs = function(root) {
+        if(!root)return 0;
+
+        let leftval = Math.max(dfs(root.left), 0);
+        let rightval = Math.max(dfs(root.right), 0);
+
+        let maxVal = root.val + leftval + rightval;
+        res = Math.max(res, maxVal);
+
+        return root.val + Math.max(leftval, rightval);// 只选一条路径即可
+    }
+    let res = -Infinity;
+    dfs(root);
+    return res;
+};
