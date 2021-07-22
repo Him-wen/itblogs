@@ -226,3 +226,24 @@ var reverseLeftWords = function(s, n) {
     }
     return res.join('');// 将数组变为字符串
 };
+
+//796.旋转字符串
+var rotateString = function(A, B) {
+    if(A.length !== B.length)return false;
+    let A1 = A.concat(A);
+    return A1.includes(B);
+};
+
+// split字符串转为数组
+// join数组转为字符串
+
+// 557.反转字符串中的单词III
+var reverseWords = function(s) {
+    let str = s.split(' ');// 将字符串用‘ ’转为数组
+    let res= [];
+
+    for(let i=0;i<str.length;i++) {// 取出每一个数组项
+        res.push(str[i].split('').reverse().join(''));// 将数组项单词变成数组元素，再反转，然后再转为字符串
+    }
+    return res.join(' ');// 将数组 转为含空格的字符串
+};
