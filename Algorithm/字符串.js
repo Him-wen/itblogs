@@ -169,10 +169,60 @@ var lengthOfLongestSubstring = function(s) {
     return res;
 };
 
+// 利用对象模拟hash
+var lengthOfLongestSubstring = function(s) {
+    let res = 0;
+    let temp = {};
+    for(let i=0, j=0; i<s.length;i++) {
+        if(!temp[s[i]]){
+            temp[s[i]] = 1;
+        }else {
+            temp[s[i]]++;
+        }
+        while(temp[s[i]] > 1){
+            temp[s[j]]--;
+            j++;
+        }
+        res = Math.max(res, i-j+1);
+    }
+    return res;
+};
+
 //反转字符串
 var reverseString = function(s) {
     for(let i=0,j=s.length-1; i < j; i++,j--) {// 从头到尾遍历
         [s[i], s[j]] = [s[j], s[i]];//交换
     }
     return s;
+};
+
+//541. 反转字符串 II
+var reverseStr = function(s, k) {
+    let res=s.split('');// 将字符串转为数组
+    for(let start = 0; start < s.length; start += 2*k) {
+        let i = start;//起点
+        // 如果最后剩下不到2k个 就直接选择后面的全部数据，如果后面还有很多就选择start到k的值
+        let j = start + k - 1 > s.length ? s.length : start + k - 1;
+        // let j = Math.max(start+k-1, s.length-1);
+        while(i<j) {//交换
+            [res[i], res[j]] = [res[j], res[i]];
+            i++;
+            j--;
+        }
+    }
+    return res.join('');
+}
+
+//左旋转字符串
+var reverseLeftWords = function(s, n) {
+    let res = [];
+
+    for(let i=0;i<s.length;i++) {
+        res[i] = s[n+i];// 将第n个字符后面的都赋值给res[i]
+    }
+
+    for(let i =0;i<n;i++) {
+        res.push(s[i]);// 将反转的直接加到末尾
+    }
+    return res.join('');// 将数组变为字符串
 };
