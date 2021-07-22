@@ -111,6 +111,7 @@ var minPathSum = function(grid) {
 // 一般来说当字符串下标涉及到i-1 循环从1开始比较好
 /*
 五部曲；
+DP数组就是记录了一个之前已经计算过的值的数组，就不用递归重复去计算了，实质上是用的迭代的手段。
 1.确定DP数组及下标的含义
 2.确定递推公式
 3.DP数组的初始化
@@ -273,7 +274,7 @@ var maxSubArray = function(nums) {
     let n = nums.length;
     let dp = new Array(n+1).fill(0);
     dp[0] = nums[0];
-    for(let i=1;i<n;i++) {
+    for(let i=1;i<n;i++) {leles
         dp[i] = Math.max(dp[i-1]+nums[i], nums[i]);
     }
     let res = dp[0];
@@ -303,4 +304,114 @@ var countSubstrings = function(s) {
         }
     }
     return res;
+};
+
+//最长回文子序列
+var longestPalindromeSubseq = function(s) {
+    let n = s.length;
+        let dp = Array.from(new Array(n+1),() => new Array(n+1).fill(0));// 这里就统一赋值为0
+    for(let i =0; i<n;i++) {
+        dp[i][i] = 1;// 初始化i与j相同的时候 回文串为1
+    }
+    for(let i=n-1; i>=0;i--) {
+        for(let j=i+1; j<n;j++) {
+            if(s[i]===s[j]) {
+                dp[i][j] = dp[i+1][j-1]+2;
+            } else {
+            // 加入s[i]不匹配的话，就选dp[i+1][j]从下一个开始，加入s[j]不匹配的话，就选dp[i][j-1]从上一个为止
+                dp[i][j] = Math.max(dp[i+1][j], dp[i][j-1]);
+            }
+        }
+    }
+    return dp[0][n-1];
+};
+
+/**
+ * 区间DP问题：
+ * 首先都是dp[i][j]为起始位置，然后分析最后一步的递推关系式
+ * @param {*} s 
+ * @returns 
+ */
+
+//奇怪的打印机
+var strangePrinter = function(s) {
+    let n = s.length;
+    let dp = Array.from(new Array(n+1), ()=>new Array(n+1).fill(0));
+
+    for(let i=0;i<n;i++) {
+        dp[i][i] = 1;
+    }
+
+    for(let i=n-1; i>=0;i--) {
+        for(let j=i+1;j<n;j++) {
+            if(s[i]===s[j]) {
+                dp[i][j] = dp[i][j-1];
+            }else {
+                let res = Infinity;
+                for(let k=i;k<j;k++){
+                    // dp[i][j] = dp[i][k] + dp[k+1][j];//需要用到i之后的状态
+                    res = Math.min(res, dp[i][k] + dp[k+1][j]);
+                }    
+                dp[i][j] = res;// 从循环k里面选一个最小的值
+            }
+        }
+    }
+    return dp[0][n-1];
+};
+
+//戳气球
+var maxCoins = function(nums) {// 要看最后一个最戳破的气球
+    // let dp = 戳破从i到j的气球的获得硬币的最大数量是dp[i][j];
+        let n = nums.length;
+        let dp = Array.from(new Array(n+2), ()=>new Array(n+2).fill(0));
+        let arr = new Array(n+2).fill(1);
+        for(let i = 1;i<n+1;++i)
+        {
+            arr[i] = nums[i-1];
+        }
+        //从左到右，从下到上
+        for(let j = 2; j<=n+1; ++j)
+        {
+            for(let i = j-2; i>=0; --i)
+            {
+                for(let k = i+1; k<=j-1; ++k)
+                {
+                    let left = arr[i], right = arr[j];
+                    dp[i][j] = Math.max(dp[i][j], left*right*arr[k]+dp[i][k]+dp[k][j]);
+                }
+            }
+        }
+        return dp[0][n+1];
+};
+
+// 打家劫舍系列
+// 打家劫舍I
+var rob = function(nums) {
+    let n = nums.length;
+    let dp = new Array(n+1).fill(0);
+    dp[0] = nums[0];
+    dp[1] = Math.max(nums[1], nums[0]);
+    for(let i=2;i<n;i++) {
+    dp[i] = Math.max(dp[i-2]+nums[i], dp[i-1]);
+    }
+    return dp[n-1];
+};
+
+// 打家劫舍II
+var rob = function(nums) {
+    let n = nums.length;
+    if(n === 1) {
+        return nums[0]
+    }
+    const dfs = function(start, end) {// 分别求两类的值
+        let dp = new Array(n+1).fill(0);
+        dp[start] = nums[start];
+        dp[start+1] = Math.max(dp[start], nums[start+1]);
+
+        for(let i=start+2;i<end;i++) {
+            dp[i] = Math.max(dp[i-2]+nums[i], dp[i-1]);
+        }
+        return dp[end-1];
+    }
+    return Math.max(dfs(1, n), dfs(0, n-1));// 这里需要分两类去计算，取max
 };
