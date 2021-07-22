@@ -247,3 +247,20 @@ var reverseWords = function(s) {
     }
     return res.join(' ');// 将数组 转为含空格的字符串
 };
+
+// URL化
+var replaceSpaces = function(s, length) {
+    let res = '';
+    let temp = 0;
+    for(let n of s) {
+        if(n === ' '){
+            res += '%20';
+        }
+        else {
+            res += n;
+        };
+        temp++;
+        if(temp === length)break;
+    }
+    return res;
+};
