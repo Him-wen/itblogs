@@ -272,9 +272,9 @@ var addStrings = function(num1, num2) {
     while(i >=0 || j>=0 || add!==0) {
         let x = i>=0 ? num1.charAt(i)-'0' : 0;
         let y = j>=0 ? num2.charAt(j)-'0' : 0;
-        let temp = x + y +add;
-        res.push(temp % 10);//取余 12->2
-        add = Math.floor(temp / 10);//取整 12->1 向下取整
+        let sum = x + y +add;
+        res.push(sum % 10);//取余 12->2
+        add = Math.floor(sum / 10);//取整 12->1 向下取整
         i--;
         j--;
     }
@@ -282,6 +282,7 @@ var addStrings = function(num1, num2) {
 };
 
 //字符串相乘
+// 使用res下标来记录数值
 var multiply = function(num1, num2) {
     let len1 = num1.length;
     let len2 = num2.length;
@@ -291,10 +292,10 @@ var multiply = function(num1, num2) {
         for(let j=len2-1;j>=0;j--) {// 从后往前遍历
             let n1 = Number(num1[i]);// 将字符串转换为数字
             let n2 = Number(num2[j]);
-            let temp = n1* n2;// 获取每位数的乘积
+            let temp = n1 * n2;// 获取每位数的乘积
             let sum = res[i+j+1] + temp;//res为每一位的数字的大小
             // res[i+j+1]代表最后一位的标识：比如123*456（i=2 j=2 下标从0开始） 的2和6相乘的下标为4
-            res[i+j+1] = sum%10;//获取余数
+            res[i+j+1] = sum % 10;//获取余数
             res[i+j] += Math.floor(sum / 10);//获取向下取整 ｜0 也行
             
         }
@@ -303,4 +304,52 @@ var multiply = function(num1, num2) {
         res.shift();// 将前置的0全部去掉
     }
     return res.length ? res.join('') : '0';
+};
+
+//基本计算器II
+
+/**
+ * 模拟：1+2*3
+ * 使用栈模拟
+ * @param {*} 
+ * @returns 
+ */
+var calculate = function(s) {
+    s = s.trim();//将字符串的首尾空格去掉
+    let n = s.length;
+    let presign = '+';//首字符串首先赋值为'+'
+    let num = 0;
+    let stk = [];//模拟栈
+
+    for(let i =0;i<n;i++) {
+        if(!isNaN(Number(s[i])) && s[i]!== ' ') {// isNaN() 函数用于检查其参数是否是非数字值
+            // 是数字才执行这一步；s[i]是数字值 && 不为空
+            num = num * 10 + s[i].charCodeAt() - '0'.charCodeAt();// 每次都进位一次
+        }
+        // ；是运算符才执行这一步注意这二个if只会执行一个 除了最后一个字符串的边界条件
+        if(isNaN(Number(s[i])) || i===n-1) {// 比如1+2*3这一步是当到了*字符这里，才执行1+2里面的‘+’的操作，然后将presign赋值为‘*’，在进行下一步计算
+            // s[i]不是数字值 就是运算符了 ｜｜ 到了最后一个字符
+            switch(presign) {
+                case '+':
+                stk.push(num);//presign存的数据总是比num多一步
+                break;
+                case '-':
+                stk.push(-num);
+                break;
+                case '*':
+                stk.push(stk.pop() * num);
+                break;
+                case '/':
+                stk.push(stk.pop() / num | 0);
+                break;
+            }
+            presign = s[i];
+            num =0;
+        }
+    }
+    let res = 0;
+    while(stk.length) {
+        res+=stk.pop();
+    }
+    return res;
 };
