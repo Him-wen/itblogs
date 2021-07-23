@@ -170,6 +170,7 @@ var lengthOfLongestSubstring = function(s) {
 };
 
 // 利用对象模拟hash
+// 使用双指针
 var lengthOfLongestSubstring = function(s) {
     let res = 0;
     let temp = {};
@@ -186,6 +187,25 @@ var lengthOfLongestSubstring = function(s) {
         res = Math.max(res, i-j+1);
     }
     return res;
+};
+
+//剑指 Offer 50. 第一个只出现一次的字符
+// 387. 字符串中的第一个唯一字符 这题也是类似，输出变一下就可以了
+var firstUniqChar = function(s) {
+    let temp = {};
+    for(let i=0; i<s.length; i++) {
+        if(!temp[s[i]]){
+            temp[s[i]] = 1;
+        }else {
+            temp[s[i]]++;
+        }
+    }
+    for(let i=0;i<s.length;i++) {
+        while(temp[s[i]] === 1){
+            return s[i];
+        }
+    }
+    return ' '
 };
 
 //反转字符串
@@ -353,3 +373,8 @@ var calculate = function(s) {
     }
     return res;
 };
+
+//224.基本计算器
+fo
+//22.括号生成
+// 回溯
