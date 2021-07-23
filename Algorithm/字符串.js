@@ -264,3 +264,43 @@ var replaceSpaces = function(s, length) {
     }
     return res;
 };
+
+// 字符串相加
+var addStrings = function(num1, num2) {
+    let i = num1.length - 1, j = num2.length -1, add = 0;
+    let res = [];
+    while(i >=0 || j>=0 || add!==0) {
+        let x = i>=0 ? num1.charAt(i)-'0' : 0;
+        let y = j>=0 ? num2.charAt(j)-'0' : 0;
+        let temp = x + y +add;
+        res.push(temp % 10);//取余 12->2
+        add = Math.floor(temp / 10);//取整 12->1 向下取整
+        i--;
+        j--;
+    }
+    return res.reverse().join('');
+};
+
+//字符串相乘
+var multiply = function(num1, num2) {
+    let len1 = num1.length;
+    let len2 = num2.length;
+    let res = new Array(len1+len2).fill(0);// 设置res下标作为标志
+
+    for(let i=len1-1; i>=0;i--) {// 从后往前遍历
+        for(let j=len2-1;j>=0;j--) {// 从后往前遍历
+            let n1 = Number(num1[i]);// 将字符串转换为数字
+            let n2 = Number(num2[j]);
+            let temp = n1* n2;// 获取每位数的乘积
+            let sum = res[i+j+1] + temp;//res为每一位的数字的大小
+            // res[i+j+1]代表最后一位的标识：比如123*456（i=2 j=2 下标从0开始） 的2和6相乘的下标为4
+            res[i+j+1] = sum%10;//获取余数
+            res[i+j] += Math.floor(sum / 10);//获取向下取整 ｜0 也行
+            
+        }
+    }
+    while(res[0] === 0) {
+        res.shift();// 将前置的0全部去掉
+    }
+    return res.length ? res.join('') : '0';
+};
