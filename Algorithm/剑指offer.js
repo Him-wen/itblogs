@@ -47,3 +47,41 @@ var exchange = function(nums) {
     }
     return nums;
 };
+
+// 剑指 Offer 29. 顺时针打印矩阵
+var spiralOrder = function(nums) {
+    if(!nums.length)return [];
+    let res= [];
+    let row = nums.length;
+    let col = nums[0].length;
+    let top = 0;
+    let bottom = row - 1;
+    let left = 0;
+    let right = col - 1;
+    let length = row * col;
+
+    while(res.length !== length) {// 四个方向分别模拟，画图
+        for(let i=left;i<=right;i++) {// 从左到右
+            res.push(nums[top][i]);
+        }
+        top++;
+
+        for(let i=top;i<=bottom;i++) {
+            res.push(nums[i][right]);
+        }
+        right--;
+
+        if (res.length === length) break;// 这句要加不然就会超时
+
+        for(let i=right;i>=left;i--) {
+            res.push(nums[bottom][i]);
+        }
+        bottom--;
+
+        for(let i=bottom;i>=top;i--) {
+            res.push(nums[i][left]);
+        }
+        left++;
+    }
+    return res;
+};

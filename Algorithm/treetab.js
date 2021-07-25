@@ -1,4 +1,5 @@
 // 平衡二叉树
+// 总结：https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/solution/yi-pian-wen-zhang-dai-ni-chi-tou-dui-che-uhgs/
 // 找一条合适的路径 就直接用 ｜｜运算符 递归就行
 // 使用的后序遍历
 var isBalanced = function(root) {
