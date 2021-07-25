@@ -119,6 +119,7 @@ var getIntersectionNode = function(headA, headB) {
 //反转链表（迭代和递归两种）
 var reverseList = function(head) {
     if(!head) return null;
+    // 将cur当作a, 将sne当作b, 将temp当作c
     let cur = head;//当前节点
     let ne = head.next;//当前节点的下一个节点
     head.next = null;//将头节点指向null
@@ -221,6 +222,60 @@ var swapPairs = function(head) {
         a.next = b.next;
         b.next = a;
         pre = a;
+    }
+    return vim.next;
+};
+
+// 19. 删除链表的倒数第 N 个结点
+var removeNthFromEnd = function(head, n) {
+    let vm = new ListNode(-1);
+    vm.next = head;// 虚拟头节点
+    let fast = vm;
+    let slow = vm;
+    for(let i=0;i<n;i++) {
+        fast = fast.next;
+    }
+    while(fast.next) {
+        fast = fast.next;
+        slow = slow.next;
+    }
+    slow.next = slow.next.next;
+    return vm.next;
+};
+
+//61.旋转链表
+var rotateRight = function(head, k) {
+    if(!head)return null;
+    let n = 0;
+    for(let i=head; i; i=i.next) n++;
+    k = k % n;
+    let fast = head, slow = head;
+
+    for(let i=0;i<k;i++) {
+        fast = fast.next;
+    }
+    while(fast.next) {
+        fast = fast.next;
+        slow = slow.next;
+    }
+    fast.next = head;
+    head = slow.next;
+    slow.next = null;
+    return head;
+};
+
+//203.移除链表元素
+var removeElements = function(head, val) {
+    if(!head)return null;
+    let vim = new ListNode(-1);
+    vim.next = head;
+    let p = vim;
+    while(p.next) {
+        if(p.next.val === val) {
+            p.next = p.next.next;
+        }else {
+            p=p.next;
+        }
     }
     return vim.next;
 };

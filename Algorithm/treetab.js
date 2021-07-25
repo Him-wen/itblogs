@@ -1,4 +1,5 @@
 // 平衡二叉树
+// 找一条合适的路径 就直接用 ｜｜运算符 递归就行
 // 使用的后序遍历
 var isBalanced = function(root) {
     const dfs = function(root) {
