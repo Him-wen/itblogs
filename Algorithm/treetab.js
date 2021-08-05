@@ -327,3 +327,20 @@ var sortedListToBST = function(head) {
     }
     return dfs(0, res.length - 1);
 };
+// 109. 有序链表转换二叉搜索树
+var sortedListToBST = function(head) {
+    let res = [];
+    while(head) {// 先将链表转化为数组，然后中序遍历随机构造二叉树即可
+        res.push(head.val);
+        head = head.next;
+    }
+    const dfs = function(left, right) {
+        if(left > right) return null;
+        const mid = (right+left) >> 1;
+        let root = new TreeNode(res[mid]);
+        root.left = dfs(left, mid - 1);
+        root.right = dfs(mid + 1, right);
+        return root;
+    }
+    return dfs(0, res.length - 1);
+};
