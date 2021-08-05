@@ -344,3 +344,24 @@ var sortedListToBST = function(head) {
     }
     return dfs(0, res.length - 1);
 };
+
+// 116. 填充每个节点的下一个右侧节点指针
+var connect = function(root) {
+    if(!root)return root;
+    let res = [];
+    let qu = [];
+    qu.push(root);
+    while(qu.length) {
+        let len = qu.length;
+        let link = [];
+        for(let i=0; i<len;i++) {
+            let p = qu.shift();
+            if(i<len-1) {
+                p.next = qu[0];
+            }
+            if(p.left)qu.push(p.left);
+            if(p.right)qu.push(p.right);
+        }
+    }
+    return root;
+};
