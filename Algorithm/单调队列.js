@@ -11,6 +11,7 @@ var maxSlidingWindow = function(nums, k) {
         qu.push(i);// 将最新的加入
 
         // 判断当前最大值（即队首元素）是否在窗口中，若不在便将其出队
+        // 需要执行多次就用while 执行一次就用if
         while(qu[0] < i + 1 - k) qu.shift();// 如果已经超过了k个数字 就将前面的删re
         // 当达到窗口大小时便开始向结果中添加数据
         if(i + 1 >= k)res.push(nums[qu[0]]);// 添加到结果数组中

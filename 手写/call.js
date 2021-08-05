@@ -10,7 +10,7 @@ function bar(name,age) {
 
 Function.prototype.call2 = function (context) {
     context = context || window;
-    context.fn = this;
+    context.fn = this;// this代表第一个函数
     var agrs = [];
     for(var i = 1; i<arguments.length; i++){// 与apply区别，这里是从1开始
         agrs.push('arguments[' + i + ']');
@@ -20,4 +20,4 @@ Function.prototype.call2 = function (context) {
     return res;
 }
 
-bar.call2(obj,'james',18)
+bar.call2(obj,'james',18)// 就是一个函数调用另外一个函数
